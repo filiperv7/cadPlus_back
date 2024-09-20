@@ -24,11 +24,12 @@ namespace CadPlus.Domain.Entities
             List<Address> addresses = null,
             List<Profile> profiles = null)
         {
+            cpf = Regex.Replace(cpf, "[^0-9]", "");
+
             if (!IsValidCPF(cpf))
                 throw new ArgumentException("CPF inválido.");
             if (!IsValidPassword(password))
                 throw new ArgumentException("A senha deve ter mais de 8 caracteres, incluindo letras maiúsculas, minúsculas e caracteres especiais.");
-
 
             Id = Guid.NewGuid();
             CPF = cpf;
@@ -83,8 +84,6 @@ namespace CadPlus.Domain.Entities
         private bool IsValidCPF(string cpf)
         {
             if (string.IsNullOrEmpty(cpf)) return false;
-
-            cpf = Regex.Replace(cpf, "[^0-9]", "");
 
             if (cpf.Length != 11) return false;
 

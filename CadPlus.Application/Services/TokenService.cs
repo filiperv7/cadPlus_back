@@ -22,16 +22,21 @@ namespace CadPlus.Application.Services
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtOptions.SecretKey);
+
+            var roleClaims = user.Profiles.Select(profile =>
+                    new Claim("profile", profile.Id.ToString())).ToList();
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                 new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, string.Join(",", user.Profiles))
-            }),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+            }.Concat(roleClaims)),
                 Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                SigningCredentials = new SigningCredentials(
+                    new SymmetricSecurityKey(key),
+                    SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _jwtOptions.Issuer,
                 Audience = _jwtOptions.Audience
             };

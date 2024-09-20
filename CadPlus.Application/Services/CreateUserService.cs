@@ -14,8 +14,15 @@ namespace CadPlus.Application.Services
             _userRepository = userRepository;
         }
 
-        public async Task<bool> CreateUser(User user, int idProfile)
+        public async Task<bool> CreateUser(User user, int idProfile, string token)
         {
+            var profiles = JwtHelper.GetProfilesFromToken(token);
+
+            if (profiles == null || !profiles.Contains(1))
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para criar um novo usuário.");
+            }
+
             bool emailAlreadyUsed = await _userRepository.CheckIfEmailAlreadyUsed(user.Email);
             if (emailAlreadyUsed == true) return false;
 

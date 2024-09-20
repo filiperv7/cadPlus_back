@@ -36,11 +36,19 @@ namespace CadPlus.API.Controllers
 
             var user = _mapper.Map<User>(userDto);
 
-            bool created = await _createUserService.CreateUser(user, userDto.IdProfile);
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
-            if (created) return Ok(new { Message = "Usuário criado com sucesso!" });
+            try
+            {
+                bool created = await _createUserService.CreateUser(user, userDto.IdProfile, token);
 
-            return BadRequest(new {Message = "Email ou CPF já utilizado por outro usuário!"});
+                if (created) return Ok(new { Message = "Usuário criado com sucesso!" });
+                else return BadRequest(new { Message = "Email ou CPF já utilizado por outro usuário!" });
+            }
+            catch (UnauthorizedAccessException error)
+            {
+                return Forbid(error.Message);
+            }
         }
 
         [HttpPost]
