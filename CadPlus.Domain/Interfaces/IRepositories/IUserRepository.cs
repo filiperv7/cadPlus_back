@@ -5,7 +5,7 @@ namespace CadPlus.Domain.Interfaces.IRepositories
     public interface IUserRepository
     {
         Task<User> GetUserByEmail(string email);
-        Task<IEnumerable<User>> GetUsersByProfile(Profile userProfile);
+        Task<IEnumerable<User>> GetUsersByProfile(int idProfile);
         Task<User> GetById(Guid id);
         Task Create(User user);
         Task Update(User user);

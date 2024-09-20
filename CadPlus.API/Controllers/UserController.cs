@@ -1,12 +1,9 @@
 ﻿using AutoMapper;
 using CadPlus.API.Models;
-using CadPlus.Application.Helpers;
-using CadPlus.Application.Services;
 using CadPlus.Domain.Entities;
 using CadPlus.Domain.Interfaces.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace CadPlus.API.Controllers
 {
@@ -16,13 +13,15 @@ namespace CadPlus.API.Controllers
     {
         private readonly ICreateUserService _createUserService;
         private readonly ILoginService _loginService;
+        private readonly IFindUsersServices _findUsersServices;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
 
-        public UserController(ICreateUserService createUserService, ILoginService loginService, ITokenService tokenService, IMapper mapper)
+        public UserController(ICreateUserService createUserService, ILoginService loginService, IFindUsersServices findUsersServices, ITokenService tokenService, IMapper mapper)
         {
             _loginService = loginService;
             _createUserService = createUserService;
+            _findUsersServices = findUsersServices;
             _tokenService = tokenService;
             _mapper = mapper;
         }
@@ -53,6 +52,22 @@ namespace CadPlus.API.Controllers
             if (token == null) return Unauthorized(new { Message = "Email ou senha inválidos." });
 
             return Ok(new { Token = $"Bearer {token}" });
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("profile/{idProfile}")]
+        public async Task<IActionResult> FindUsersByProfile(int idProfile)
+        {
+            var users = await _findUsersServices.FindUsersByProfile(idProfile);
+
+            if (!users.Any())
+            {
+                return NotFound(new { Message = "Nenhum usuário encontrado com o perfil especificado." });
+            }
+
+            var usersDto = _mapper.Map<IEnumerable<UserResponseDto>>(users);
+            return Ok(usersDto);
         }
     }
 }

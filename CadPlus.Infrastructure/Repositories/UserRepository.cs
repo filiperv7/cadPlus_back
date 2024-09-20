@@ -20,10 +20,12 @@ namespace CadPlus.Infrastructure.Repositories
             return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<IEnumerable<User>> GetUsersByProfile(Profile userProfile)
+        public async Task<IEnumerable<User>> GetUsersByProfile(int idProfile)
         {
             return await _context.Users
-            .Where(u => u.Profiles.Contains(userProfile) && !u.Excluded)
+            .Include(u => u.Profiles)
+            .Include(u => u.Addresses)
+            .Where(u => u.Profiles.Any(p => p.Id == idProfile) && !u.Excluded)
             .ToListAsync();
         }
 

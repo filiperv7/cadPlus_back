@@ -54,7 +54,8 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ICreateUserService, CreateUserService>();
-builder.Services.AddScoped<ILoginService, LoginService>();  
+builder.Services.AddScoped<ILoginService, LoginService>();
+builder.Services.AddScoped<IFindUsersServices, FindUsersServices>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddSwaggerGen(c =>

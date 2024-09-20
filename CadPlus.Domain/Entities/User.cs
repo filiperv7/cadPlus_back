@@ -70,7 +70,7 @@ namespace CadPlus.Domain.Entities
 
         private bool IsValidPassword(string password)
         {
-            if (string.IsNullOrEmpty(password) || password.Length <= 8)
+            if (string.IsNullOrEmpty(password) || password.Length < 8)
                 return false;
 
             bool hasUpperCase = password.Any(char.IsUpper);
