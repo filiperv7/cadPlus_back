@@ -17,5 +17,10 @@ namespace CadPlus.Application.Services
         {
             return await _userRepository.GetUsersByProfile(idProfile);
         }
+
+        public async Task<User> FindUserById(Guid id)
+        {
+            return await _userRepository.GetById(id);
+        }
     }
 }

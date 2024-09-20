@@ -31,7 +31,10 @@ namespace CadPlus.Infrastructure.Repositories
 
         public async Task<User> GetById(Guid id)
         {
-            return await _context.Users.Include(u => u.Addresses).FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users
+                .Include(u => u.Profiles)
+                .Include(u => u.Addresses)
+                .FirstOrDefaultAsync(u => u.Id == id && !u.Excluded);
         }
 
         public async Task Create(User user)

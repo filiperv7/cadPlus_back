@@ -4,6 +4,7 @@ namespace CadPlus.API.Models
 {
     public class UserResponseDto
     {
+        public Guid id { get; set; }
         public string CPF { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

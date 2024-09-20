@@ -77,5 +77,20 @@ namespace CadPlus.API.Controllers
             var usersDto = _mapper.Map<IEnumerable<UserResponseDto>>(users);
             return Ok(usersDto);
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> FindUserById(Guid id)
+        {
+            var user = await _findUsersServices.FindUserById(id);
+
+            if (user == null)
+            {
+                return NotFound(new { Message = "Usuário não encontrado." });
+            }
+
+            var userDto = _mapper.Map<UserResponseDto>(user);
+            return Ok(userDto);
+        }
     }
 }
