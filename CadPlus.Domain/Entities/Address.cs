@@ -1,4 +1,5 @@
 ﻿using CadPlus.Domain.Common;
+using System.Text.RegularExpressions;
 
 namespace CadPlus.Domain.Entities
 {
@@ -16,7 +17,7 @@ namespace CadPlus.Domain.Entities
             Street = street;
             City = city;
             State = state;
-            ZipCode = zipCode;
+            ZipCode = Regex.Replace(zipCode, "[^0-9]", "");
 
             Users = new List<User>();
         }

@@ -120,5 +120,10 @@ namespace CadPlus.Domain.Entities
 
             return cpf.EndsWith(digito);
         }
+
+        public void SetAddresses(List<Address> addresses)
+        {
+            this.Addresses = addresses;
+        }
     }
 }
