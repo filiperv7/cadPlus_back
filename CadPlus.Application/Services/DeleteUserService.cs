@@ -24,8 +24,7 @@ namespace CadPlus.Application.Services
             User user = await _userRepository.GetById(id);
             if (user == null) return false;
 
-            user.Excluded = true;
-            user.ExclusionDate = DateTime.UtcNow;
+            user.DeleteUser();
 
             await _userRepository.Update(user);
 

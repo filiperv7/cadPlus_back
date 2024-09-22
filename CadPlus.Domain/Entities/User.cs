@@ -62,6 +62,10 @@ namespace CadPlus.Domain.Entities
 
         public List<Profile> Profiles { get; private set; }
 
+        public bool Excluded { get; set; } = false;
+
+        public DateTime? ExclusionDate { get; set; }
+
         public void SetPassword(string password)
         {
             if (!IsValidPassword(password))
@@ -124,6 +128,12 @@ namespace CadPlus.Domain.Entities
         public void SetAddresses(List<Address> addresses)
         {
             this.Addresses = addresses;
+        }
+
+        public void DeleteUser()
+        {
+            this.Excluded = true;
+            this.ExclusionDate = DateTime.UtcNow;
         }
     }
 }
