@@ -2,6 +2,7 @@
 using CadPlus.Domain.Interfaces.IRepositories;
 using CadPlus.Domain.Interfaces.IServices;
 using CadPlus.Application.Helpers;
+using CadPlus.Domain.Enums;
 
 namespace CadPlus.Application.Services
 {
@@ -32,6 +33,8 @@ namespace CadPlus.Application.Services
             if (cpfAlreadyUsed == true) return false;
 
             user.SetPassword(PasswordHelper.HashPassword(user.Password));
+
+            if (idProfile == 4) user.SetHealthStatus(HealthStatus.Unknown);
 
             Profile profile = await _userRepository.GetProfileById(idProfile);
             user.Profiles.Add(profile);

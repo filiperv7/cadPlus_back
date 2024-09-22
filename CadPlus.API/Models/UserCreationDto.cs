@@ -1,5 +1,4 @@
-﻿using CadPlus.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace CadPlus.API.Models
 {
@@ -21,9 +20,6 @@ namespace CadPlus.API.Models
         public string Password { get; set; }
 
         public string Phone { get; set; }
-
-        [Required]
-        public HealthStatus HealthStatus { get; set; }
 
         [Required]
         public List<AddressDto> Addresses { get; set; }

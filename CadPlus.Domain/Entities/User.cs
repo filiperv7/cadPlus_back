@@ -24,8 +24,6 @@ namespace CadPlus.Domain.Entities
             List<Address> addresses = null,
             List<Profile> profiles = null)
         {
-            cpf = Regex.Replace(cpf, "[^0-9]", "");
-
             if (!IsValidCPF(cpf))
                 throw new ArgumentException("CPF inválido.");
             if (!IsValidPassword(password))
@@ -58,7 +56,7 @@ namespace CadPlus.Domain.Entities
         
         public string Phone { get; private set; }
         
-        public HealthStatus HealthStatus { get; private set; }
+        public HealthStatus? HealthStatus { get; private set; }
 
         public List<Profile> Profiles { get; private set; }
 
@@ -87,6 +85,8 @@ namespace CadPlus.Domain.Entities
 
         private bool IsValidCPF(string cpf)
         {
+            cpf = Regex.Replace(cpf, "[^0-9]", "");
+
             if (string.IsNullOrEmpty(cpf)) return false;
 
             if (cpf.Length != 11) return false;
@@ -134,6 +134,11 @@ namespace CadPlus.Domain.Entities
         {
             this.Excluded = true;
             this.ExclusionDate = DateTime.UtcNow;
+        }
+
+        public void SetHealthStatus(HealthStatus status)
+        {
+            this.HealthStatus = status;
         }
     }
 }
