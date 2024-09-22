@@ -1,5 +1,6 @@
 ﻿using CadPlus.API.Models;
 using CadPlus.Domain.Entities;
+using System.Text.RegularExpressions;
 
 namespace CadPlus.API.Mapping
 {
@@ -8,7 +9,8 @@ namespace CadPlus.API.Mapping
         public MappingProfile()
         {
             CreateMap<UserCreationDto, User>()
-                .ForMember(dest => dest.Password, opt => opt.Ignore());
+                .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => Regex.Replace(src.CPF, "[^0-9]", "")))
+                .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
 
             CreateMap<AddressDto, Address>()
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
