@@ -13,7 +13,7 @@ namespace CadPlus.Application.Services
             _addressRepository = addressRepository;
         }
 
-        public async Task<List<Address>> HandleWithAddresses(List<Address> addresses)
+        public async Task<List<Address>> HandleWithAddresses(List<Address> addresses, bool isUpdate)
         {
             var processedAddresses = new List<Address>();
 
@@ -24,6 +24,9 @@ namespace CadPlus.Application.Services
                 if (sameAddress == null)
                 {
                     processedAddresses.Add(address);
+
+                    if (isUpdate) _addressRepository.AddAddress(address);
+
                     continue;
                 }
 

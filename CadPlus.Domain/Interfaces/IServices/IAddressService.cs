@@ -4,6 +4,6 @@ namespace CadPlus.Domain.Interfaces.IServices
 {
     public interface IAddressService
     {
-        public Task<List<Address>> HandleWithAddresses(List<Address> addresses);
+        public Task<List<Address>> HandleWithAddresses(List<Address> addresses, bool isUpdate);
     }
 }
