@@ -14,10 +14,15 @@ namespace CadPlus.Application.Helpers
             if (jwtToken == null)
                 return null;
 
-            var claims = jwtToken.Claims.ToList();
-            var claim = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            foreach (var claim in jwtToken.Claims)
+            {
+                if (claim.Type == "nameid")
+                {
+                    return claim.Value;
+                }
+            }
 
-            return claim?.Value;
+            return null;
         }
 
         public static List<int> GetProfilesFromToken(string token)
