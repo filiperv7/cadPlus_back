@@ -154,5 +154,33 @@ namespace CadPlus.API.Controllers
                 return Forbid(error.Message);
             }
         }
+
+        [Authorize]
+        [HttpPut]
+        [Route("check_in_patient/existing_user/{idUser}")]
+        public async Task<IActionResult> CheckInPatientWithExistingUser(Guid idUser)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var profiles = JwtHelper.GetProfilesFromToken(token);
+
+            try
+            {
+                await _editUserService.CheckInPatientWithExistingUser(idUser, profiles);
+
+                return Ok(new { Message = "Paciente cadastrado com sucesso." });
+            }
+            catch (UnauthorizedAccessException error)
+            {
+                return Forbid(error.Message);
+            }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(error.Message);
+            }
+            catch (InvalidOperationException error)
+            {
+                return Conflict(error.Message);
+            }
+        }
     }
 }
