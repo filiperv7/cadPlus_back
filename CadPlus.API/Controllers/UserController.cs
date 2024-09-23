@@ -2,6 +2,7 @@
 using CadPlus.API.Models;
 using CadPlus.Application.Helpers;
 using CadPlus.Domain.Entities;
+using CadPlus.Domain.Enums;
 using CadPlus.Domain.Interfaces.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,7 @@ namespace CadPlus.API.Controllers
         private readonly ICreateUserService _createUserService;
         private readonly ILoginService _loginService;
         private readonly IFindUsersServices _findUsersServices;
+        private readonly IEditUserService _editUserService;
         private readonly IDeleteUserService _deleteUserService;
         private readonly IMapper _mapper;
 
@@ -22,12 +24,14 @@ namespace CadPlus.API.Controllers
             ICreateUserService createUserService,
             ILoginService loginService,
             IFindUsersServices findUsersServices,
+            IEditUserService editUserService,
             IDeleteUserService deleteUserService,
             IMapper mapper)
         {
             _loginService = loginService;
             _createUserService = createUserService;
             _findUsersServices = findUsersServices;
+            _editUserService = editUserService;
             _deleteUserService = deleteUserService;
             _mapper = mapper;
         }
@@ -115,6 +119,35 @@ namespace CadPlus.API.Controllers
                 return userUpdated
                     ? Ok(new { Message = "Usuário deletado com sucesso." })
                     : NotFound(new { Message = "Usuário não encontrado." });
+            }
+            catch (UnauthorizedAccessException error)
+            {
+                return Forbid(error.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPut]
+        [Route("evolve_patient/{id}")]
+        public async Task<IActionResult> EvolvePatient(Guid id, [FromBody] int healthStatus)
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var profiles = JwtHelper.GetProfilesFromToken(token);
+
+            try
+            {
+                if (!Enum.IsDefined(typeof(HealthStatus), healthStatus))
+                {
+                    return BadRequest(new { Message = "Status de saúde inválido." });
+                }
+
+                var status = (HealthStatus)healthStatus;
+
+                bool patient = await _editUserService.EvolvePatient(id, status, profiles);
+
+                return patient
+                    ? Ok(new { Message = "Paciente evoluído com sucesso." })
+                    : NotFound(new { Message = "Paciente não encontrado." });
             }
             catch (UnauthorizedAccessException error)
             {
