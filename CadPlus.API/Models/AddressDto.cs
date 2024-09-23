@@ -5,7 +5,8 @@ namespace CadPlus.API.Models
     public class AddressDto
     {
         [Required]
-        [MinLength(8, ErrorMessage = "CEP deve conter pelo menos 8 digitos")]
+        [StringLength(8, MinimumLength = 8, ErrorMessage = "CEP deve conter exatamente 8 dígitos.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "CEP deve conter apenas dígitos.")]
         public string ZipCode { get; set; }
 
         [Required]

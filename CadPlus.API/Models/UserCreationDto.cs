@@ -19,6 +19,9 @@ namespace CadPlus.API.Models
         [MinLength(8, ErrorMessage = "A senha deve ter pelo menos 8 caracteres.")]
         public string Password { get; set; }
 
+        [Required]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "Número de telefone deve conter exatamente 11 dígitos.")]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "Número de telefone deve conter apenas dígitos numéricos.")]
         public string Phone { get; set; }
 
         [Required]
