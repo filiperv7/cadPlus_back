@@ -4,6 +4,6 @@ namespace CadPlus.Domain.Interfaces.IServices
 {
     public interface ICreateUserService
     {
-        Task<bool> CreateUser(User user, int idProfile, string token);
+        Task<bool> CreateUser(User user, int idProfile, List<int> profiles);
     }
 }

@@ -9,18 +9,16 @@ namespace CadPlus.Application.Services
     public class CreateUserService : ICreateUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IAddressRepository _addressRepository;
+        private readonly IAddressService _addressService;
 
-        public CreateUserService(IUserRepository userRepository, IAddressRepository addressRepository)
+        public CreateUserService(IUserRepository userRepository, IAddressService addressService)
         {
             _userRepository = userRepository;
-            _addressRepository = addressRepository;
+            _addressService = addressService;
         }
 
-        public async Task<bool> CreateUser(User user, int idProfile, string token)
+        public async Task<bool> CreateUser(User user, int idProfile, List<int> profiles)
         {
-            var profiles = JwtHelper.GetProfilesFromToken(token);
-
             if (profiles == null || !profiles.Contains(1))
             {
                 throw new UnauthorizedAccessException("Você não tem permissão para criar um novo usuário.");
@@ -39,31 +37,11 @@ namespace CadPlus.Application.Services
             Profile profile = await _userRepository.GetProfileById(idProfile);
             user.Profiles.Add(profile);
 
-            user.SetAddresses(await this.HandleWithAddresses(user.Addresses));
+            user.SetAddresses(await _addressService.HandleWithAddresses(user.Addresses));
 
             await _userRepository.Create(user);
 
             return true;
-        }
-
-        private async Task<List<Address>> HandleWithAddresses(List<Address> addresses)
-        {
-            var processedAddresses = new List<Address>();
-
-            foreach (var address in addresses)
-            {
-                var sameAddress = await _addressRepository.CheckIfAddresAlreadyExists(address.ZipCode, address.Street);
-
-                if (sameAddress == null) 
-                {
-                    processedAddresses.Add(address);
-                    continue;
-                }
-
-                processedAddresses.Add(sameAddress);
-            }
-
-            return processedAddresses;
         }
     }
 }

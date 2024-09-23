@@ -47,10 +47,11 @@ namespace CadPlus.API.Controllers
             var user = _mapper.Map<User>(userDto);
 
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var profiles = JwtHelper.GetProfilesFromToken(token);
 
             try
             {
-                bool created = await _createUserService.CreateUser(user, userDto.IdProfile, token);
+                bool created = await _createUserService.CreateUser(user, userDto.IdProfile, profiles);
 
                 return created
                     ? Ok(new { Message = "Usuário criado com sucesso!" })
