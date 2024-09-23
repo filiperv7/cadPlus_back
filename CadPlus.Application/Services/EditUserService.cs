@@ -1,4 +1,5 @@
-﻿using CadPlus.Domain.Entities;
+﻿using CadPlus.Application.Helpers;
+using CadPlus.Domain.Entities;
 using CadPlus.Domain.Enums;
 using CadPlus.Domain.Interfaces.IRepositories;
 using CadPlus.Domain.Interfaces.IServices;
@@ -9,10 +10,43 @@ namespace CadPlus.Application.Services
     public class EditUserService : IEditUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IAddressRepository _addressRepository;
+        private readonly IAddressService _addressService;
 
-        public EditUserService(IUserRepository userRepository)
+        public EditUserService(IUserRepository userRepository, IAddressRepository addressRepository, IAddressService addressService)
         {
             _userRepository = userRepository;
+            _addressRepository = addressRepository;
+            _addressService = addressService;
+        }
+
+        public async Task<bool> EditUser(User user, List<Guid> addressesExcluded, List<int> requestUserProfiles, Guid requestUserId)
+        {
+            if (requestUserProfiles == null || (!requestUserProfiles.Contains(1) && user.Id != requestUserId))
+            {
+                throw new UnauthorizedAccessException("Você não tem permissão para editar este usuário.");
+            }
+
+            if (!user.IsValidCPF(user.CPF))
+                throw new ArgumentException("CPF inválido.");
+            if (!user.IsValidPassword(user.Password))
+                throw new ArgumentException("A senha deve ter mais de 8 caracteres, incluindo letras maiúsculas, minúsculas e caracteres especiais.");
+
+            var existingUser = await _userRepository.GetById(user.Id);
+            if (existingUser == null) throw new KeyNotFoundException("Usuário não encontrado");
+
+            existingUser.SetName(user.Name);
+            existingUser.SetEmail(user.Email);
+            existingUser.SetPhone(user.Phone);
+            existingUser.UpdateDate = DateTime.UtcNow;
+
+            if (addressesExcluded.Count > 0) await _addressRepository.RemoveUserAddresses(user.Id, addressesExcluded);
+
+            existingUser.SetAddresses(await _addressService.HandleWithAddresses(user.Addresses, true));
+
+            await _userRepository.Update(existingUser);
+
+            return true;
         }
 
         public async Task<bool> EvolvePatient(Guid id, HealthStatus status, List<int> profiles)

@@ -129,6 +129,39 @@ namespace CadPlus.API.Controllers
 
         [Authorize]
         [HttpPut]
+        [Route("update")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateDto userDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = _mapper.Map<User>(userDto);
+
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var profiles = JwtHelper.GetProfilesFromToken(token);
+            var requestUserId = JwtHelper.GetClaimIdUserFromToken(token);
+
+            try
+            {
+                bool updated = await _editUserService.EditUser(user, userDto.AddressesExcluded, profiles, Guid.Parse(requestUserId));
+
+                return updated
+                    ? Ok(new { Message = "Usuário atualizado com sucesso!" })
+                    : BadRequest(new { Message = "Falha na atualização do usuário." });
+            }
+            catch (UnauthorizedAccessException error)
+            {
+                return Forbid(error.Message);
+            }
+            catch (KeyNotFoundException error)
+            {
+                return NotFound(error.Message);
+            }
+        }
+
+
+        [Authorize]
+        [HttpPut]
         [Route("evolve_patient/{id}")]
         public async Task<IActionResult> EvolvePatient(Guid id, [FromBody] int healthStatus)
         {

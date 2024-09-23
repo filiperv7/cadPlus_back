@@ -12,12 +12,20 @@ namespace CadPlus.API.Mapping
                 .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => Regex.Replace(src.CPF, "[^0-9]", "")))
                 .ForMember(dest => dest.Password, opt => opt.MapFrom(src => src.Password));
 
+            CreateMap<UserUpdateDto, User>()
+                .ForMember(dest => dest.CPF, opt => opt.MapFrom(src => Regex.Replace(src.CPF, "[^0-9]", "")));
+
             CreateMap<AddressDto, Address>()
                 .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
                 .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
                 .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
-                .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.ZipCode))
-                .ReverseMap();
+                .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.ZipCode));
+
+            CreateMap<Address, AddressResponseDto>()
+                .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Street))
+                .ForMember(dest => dest.City, opt => opt.MapFrom(src => src.City))
+                .ForMember(dest => dest.State, opt => opt.MapFrom(src => src.State))
+                .ForMember(dest => dest.ZipCode, opt => opt.MapFrom(src => src.ZipCode));
 
             CreateMap<User, UserResponseDto>()
                .ForMember(dest => dest.Addresses, opt => opt.MapFrom(src => src.Addresses))
