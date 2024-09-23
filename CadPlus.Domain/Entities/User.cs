@@ -71,7 +71,7 @@ namespace CadPlus.Domain.Entities
             this.Password = password;
         }
 
-        private bool IsValidPassword(string password)
+        public bool IsValidPassword(string password)
         {
             if (string.IsNullOrEmpty(password) || password.Length < 8)
                 return false;
@@ -83,7 +83,7 @@ namespace CadPlus.Domain.Entities
             return hasUpperCase && hasLowerCase && hasSpecialChar;
         }
 
-        private bool IsValidCPF(string cpf)
+        public bool IsValidCPF(string cpf)
         {
             cpf = Regex.Replace(cpf, "[^0-9]", "");
 
@@ -139,6 +139,21 @@ namespace CadPlus.Domain.Entities
         public void SetHealthStatus(HealthStatus status)
         {
             this.HealthStatus = status;
+        }
+
+        public void SetName(string name)
+        {
+            this.Name = name;
+        }
+
+        public void SetEmail(string email)
+        {
+            this.Email = email;
+        }
+
+        public void SetPhone(string phone)
+        {
+            this.Phone = phone;
         }
     }
 }
