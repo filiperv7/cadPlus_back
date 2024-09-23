@@ -5,6 +5,8 @@ namespace CadPlus.API.Models
     public class UserCreationDto
     {
         [Required]
+        [StringLength(11, MinimumLength = 11, ErrorMessage = "CPF deve conter exatamente 11 dígitos.")]
+        [RegularExpression(@"^\d{11}$", ErrorMessage = "CPF deve conter apenas dígitos numéricos.")]
         public string CPF { get; set; }
 
         [Required]

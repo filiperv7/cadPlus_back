@@ -24,6 +24,11 @@ namespace CadPlus.Application.Services
                 throw new UnauthorizedAccessException("Você não tem permissão para criar um novo usuário.");
             }
 
+            if (!user.IsValidCPF(user.CPF))
+                throw new ArgumentException("CPF inválido.");
+            if (!user.IsValidPassword(user.Password))
+                throw new ArgumentException("A senha deve ter mais de 8 caracteres, incluindo letras maiúsculas, minúsculas e caracteres especiais.");
+
             bool emailAlreadyUsed = await _userRepository.CheckIfEmailAlreadyUsed(user.Email);
             if (emailAlreadyUsed == true) return false;
 
@@ -37,7 +42,7 @@ namespace CadPlus.Application.Services
             Profile profile = await _userRepository.GetProfileById(idProfile);
             user.Profiles.Add(profile);
 
-            user.SetAddresses(await _addressService.HandleWithAddresses(user.Addresses));
+            user.SetAddresses(await _addressService.HandleWithAddresses(user.Addresses, false));
 
             await _userRepository.Create(user);
 
