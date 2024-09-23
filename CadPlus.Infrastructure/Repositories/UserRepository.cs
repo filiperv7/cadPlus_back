@@ -39,7 +39,7 @@ namespace CadPlus.Infrastructure.Repositories
 
         public async Task Create(User user)
         {
-            var test = await _context.Users.AddAsync(user);
+            await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
         }
 
