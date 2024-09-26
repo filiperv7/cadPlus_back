@@ -68,6 +68,7 @@ namespace CadPlus.Domain.Entities
         {
             if (!IsValidPassword(password))
                 throw new ArgumentException("A senha deve ter mais de 8 caracteres, incluindo letras maiúsculas, minúsculas e caracteres especiais.");
+
             this.Password = password;
         }
 
@@ -154,6 +155,14 @@ namespace CadPlus.Domain.Entities
         public void SetPhone(string phone)
         {
             this.Phone = phone;
+        }
+
+        public void SetCpf(string cpf)
+        {
+            if (!IsValidCPF(cpf))
+                throw new ArgumentException("CPF inválido.");
+
+            this.CPF = cpf;
         }
     }
 }

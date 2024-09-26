@@ -11,7 +11,7 @@ namespace CadPlus.Domain.Interfaces.IRepositories
         Task Update(User user);
         Task Delete(Guid id);
         Task<Profile> GetProfileById(int id);
-        Task<bool> CheckIfEmailAlreadyUsed(string email);
-        Task<bool> CheckIfCpfAlreadyUsed(string cpf);
+        Task<bool> CheckIfEmailAlreadyUsed(string email, Guid? userId = null);
+        Task<bool> CheckIfCpfAlreadyUsed(string cpf, Guid? userId = null);
     }
 }

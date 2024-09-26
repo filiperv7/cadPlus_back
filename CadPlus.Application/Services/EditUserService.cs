@@ -28,13 +28,20 @@ namespace CadPlus.Application.Services
 
             if (!user.IsValidCPF(user.CPF))
                 throw new ArgumentException("CPF inválido.");
-            
+
+            bool emailAlreadyUsed = await _userRepository.CheckIfEmailAlreadyUsed(user.Email, user.Id);
+            if (emailAlreadyUsed == true) return false;
+
+            bool cpfAlreadyUsed = await _userRepository.CheckIfCpfAlreadyUsed(user.CPF, user.Id);
+            if (cpfAlreadyUsed == true) return false;
+
             var existingUser = await _userRepository.GetById(user.Id);
             if (existingUser == null) throw new KeyNotFoundException("Usuário não encontrado");
 
             existingUser.SetName(user.Name);
             existingUser.SetEmail(user.Email);
             existingUser.SetPhone(user.Phone);
+            existingUser.SetCpf(user.CPF);
             existingUser.UpdateDate = DateTime.UtcNow;
 
             if (addressesExcluded.Count > 0) await _addressRepository.RemoveUserAddresses(user.Id, addressesExcluded);

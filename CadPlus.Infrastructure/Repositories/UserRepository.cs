@@ -66,16 +66,29 @@ namespace CadPlus.Infrastructure.Repositories
             return await _context.Profiles.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<bool> CheckIfEmailAlreadyUsed(string email)
+        public async Task<bool> CheckIfEmailAlreadyUsed(string email, Guid? userId = null)
         {
-            if (await _context.Users.FirstOrDefaultAsync(u => u.Email == email && !u.Excluded) == null) return false;
+            if (userId == null)
+            {
+                if (await _context.Users.FirstOrDefaultAsync(u => u.Email == email && !u.Excluded) == null) return false;
+
+                return true;
+            }
+
+            if (await _context.Users.FirstOrDefaultAsync(u => u.Email == email && !u.Excluded && u.Id != userId) == null) return false;
 
             return true;
         }
 
-        public async Task<bool> CheckIfCpfAlreadyUsed(string cpf)
+        public async Task<bool> CheckIfCpfAlreadyUsed(string cpf, Guid? userId = null)
         {
-            if (await _context.Users.FirstOrDefaultAsync(u => u.CPF == cpf && !u.Excluded) == null) return false;
+            if (userId == null) {
+                if (await _context.Users.FirstOrDefaultAsync(u => u.CPF == cpf && !u.Excluded) == null) return false;
+                
+                return true;
+            }
+
+            if (await _context.Users.FirstOrDefaultAsync(u => u.CPF == cpf && !u.Excluded && u.Id != userId) == null) return false;
 
             return true;
         }
