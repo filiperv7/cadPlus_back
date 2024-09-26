@@ -17,6 +17,11 @@ CadPLus é um gerenciador hospitalar de funcionários e pacientes. Nele você po
 4. Somente Perfis "Médico(a)" ou "Enfermeiro(a)" podem evoluir um "Paciente".
 5. Usuários podem editar tudo em si mesmos (exceto "EstadoSaude").
 
+## Algumas decisões e observações
+Escolhi usar o SQL Server com autenticação padrão do Windows para melhor facilitação na hora de um terceiro rodar o projeto.
+Além disso, também existe um usuário padrão que é criado ao atualizar o banco de dados com o detnet (passo 4) que pode ser editado depois de acessar a aplicação.
+Email: admin@default.com, Senha: Adm!n123
+
 ## Como rodar a aplicação (6 passos)
 ##### 1. Clone o projeto
 ```bash
