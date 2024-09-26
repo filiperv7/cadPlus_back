@@ -159,25 +159,22 @@ namespace CadPlus.API.Controllers
             }
         }
 
-
         [Authorize]
         [HttpPut]
         [Route("evolve_patient/{id}")]
-        public async Task<IActionResult> EvolvePatient(Guid id, [FromBody] int healthStatus)
+        public async Task<IActionResult> EvolvePatient(Guid id, [FromBody] HealthStatusDto healthStatus)
         {
             var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
             var profiles = JwtHelper.GetProfilesFromToken(token);
 
             try
             {
-                if (!Enum.IsDefined(typeof(HealthStatus), healthStatus))
+                if (!Enum.IsDefined(typeof(HealthStatus), healthStatus.HealthStatus))
                 {
                     return BadRequest(new { Message = "Status de saúde inválido." });
                 }
 
-                var status = (HealthStatus)healthStatus;
-
-                bool patient = await _editUserService.EvolvePatient(id, status, profiles);
+                bool patient = await _editUserService.EvolvePatient(id, healthStatus.HealthStatus, profiles);
 
                 return patient
                     ? Ok(new { Message = "Paciente evoluído com sucesso." })
@@ -215,6 +212,21 @@ namespace CadPlus.API.Controllers
             {
                 return Conflict(error.Message);
             }
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("infos_of_logged_user")]
+        public async Task<IActionResult> GetInfosOfLoggedUser()
+        {
+            var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+            var requestUserId = JwtHelper.GetClaimIdUserFromToken(token);
+
+            User loggedUser = await _findUsersServices.GetInfosOfLoggedUser(Guid.Parse(requestUserId));
+
+            return loggedUser != null
+                ? Ok(_mapper.Map<UserResponseDto>(loggedUser))
+                : NotFound(new { Message = "Usuário não encontrado." });
         }
     }
 }

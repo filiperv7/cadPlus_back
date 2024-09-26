@@ -6,5 +6,7 @@ namespace CadPlus.Domain.Interfaces.IServices
     {
         Task<IEnumerable<User>> FindUsersByProfile(int idProfile);
         Task<User> FindUserById(Guid id);
+
+        Task<User> GetInfosOfLoggedUser(Guid requestUserId);
     }
 }

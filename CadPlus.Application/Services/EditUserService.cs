@@ -1,5 +1,4 @@
-﻿using CadPlus.Application.Helpers;
-using CadPlus.Domain.Entities;
+﻿using CadPlus.Domain.Entities;
 using CadPlus.Domain.Enums;
 using CadPlus.Domain.Interfaces.IRepositories;
 using CadPlus.Domain.Interfaces.IServices;
@@ -29,9 +28,7 @@ namespace CadPlus.Application.Services
 
             if (!user.IsValidCPF(user.CPF))
                 throw new ArgumentException("CPF inválido.");
-            if (!user.IsValidPassword(user.Password))
-                throw new ArgumentException("A senha deve ter mais de 8 caracteres, incluindo letras maiúsculas, minúsculas e caracteres especiais.");
-
+            
             var existingUser = await _userRepository.GetById(user.Id);
             if (existingUser == null) throw new KeyNotFoundException("Usuário não encontrado");
 
