@@ -1,6 +1,6 @@
 # CadPlus | ERP Hospitalar
 
-Esta é uma aplicação .NET e C#; também utilizei Entity Framework, SQL Server.
+Esta é uma aplicação .NET e C#; também utilizei Entity Framework, SQL Server e AutoMapper.
 
 #### Aqui está o [Front-end](https://github.com/filiperv7/cadPlus_front) desta aplicação.
 
