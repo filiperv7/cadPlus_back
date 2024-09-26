@@ -21,6 +21,7 @@ CadPLus é um gerenciador hospitalar de funcionários e pacientes. Nele você po
 Escolhi usar o SQL Server com autenticação padrão do Windows para melhor facilitação na hora de um terceiro rodar o projeto.
 Além disso, também existe um usuário padrão que é criado ao atualizar o banco de dados com o detnet (passo 4) que pode ser editado depois de acessar a aplicação.
 Email: admin@default.com, Senha: Adm!n123
+
 É importante que o projeto de inicialização seja o CadPlus.API e que o appsettings.json dele seja alterado com uma nova Secret Key.
 
 ## Como rodar a aplicação (6 passos)
@@ -45,7 +46,6 @@ dotnet ef database update --project CadPlus.Infrastructure --startup-project Cad
 ```
 
 ##### 5. Adicione um _Secret Key_ no arquivo appsettings.json (dentro do projeto CadPlus.API)
-_Por exemplo:_ ```AKeyThatIsLongEnoughToBe256BitsOr32Characters!```
 
 ##### 6. Agora é só rodar o projeto no Visual Studio ou como você preferir
 ##### Obs.: para uma experiência completa, não deixe de rodar também o [Front-end](https://github.com/filiperv7/cadPlus_front)
